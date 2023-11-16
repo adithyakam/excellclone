@@ -16,3 +16,40 @@ for (i = 0; i < rows; i++) {
   }
   sheetDB.push(sheetRow);
 }
+
+let bold = document.querySelector(".bold");
+let alignment = document.querySelectorAll(".alignment");
+let italic = document.querySelector(".italic");
+let underline = document.querySelector(".underline");
+let fontSize = document.querySelector(".font-size");
+let fontFamily = document.querySelector(".font-family-prop");
+let fontColor = document.querySelector(".font-color-prop");
+let bgColor = document.querySelector(".bg-color-prop");
+let leftAlign = alignment[0];
+let centerAlign = alignment[1];
+let rightAlign = alignment[2];
+// let addBar = document.querySelector(".address-bar");
+let activeCellPrp = "#d1d8e0";
+let inactiveCellPrp = "#ecf0f2";
+
+bold.addEventListener("click", (e) => {
+  let add = addBar.value;
+  let [cell, cellprp] = getActiveCell(add);
+
+  cellprp.bold = !cellprp.bold;
+  cell.style.fontWeight = cellprp.bold ? "bold" : "normal";
+  bold.style.backgroundColor = cellprp.bold ? activeCellPrp : inactiveCellPrp;
+});
+
+function getActiveCell(add) {
+  let [rid, cid] = decodeRCID(add);
+  let cell = document.querySelector(`.cell[rid="${rid}"[cid="${cid}"]]`);
+  let cellprp = sheetDB[rid][cid];
+  return [cell, cellprp];
+}
+
+function decodeRCID(add) {
+  let rid = Number(add.slice(1) - 1);
+  let cid = Number(add.charCodeAt(0)) - 65;
+  return [rid, cid];
+}

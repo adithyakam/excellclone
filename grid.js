@@ -27,7 +27,9 @@ for (let i = 0; i < rows; i++) {
     let cell = document.createElement("div");
     cell.setAttribute("class", "cell");
     cell.setAttribute("contenteditable", "true");
-
+    cell.setAttribute("rid", i);
+    cell.setAttribute("cid", j);
+    // cell.spellcheck(false);
     addRow.appendChild(cell);
     addListnerForAddBarDisplay(cell, i, j);
   }
@@ -41,3 +43,6 @@ function addListnerForAddBarDisplay(cell, i, j) {
     addBar.value = `${colID}${rowID}`;
   });
 }
+
+let firstcell = document.querySelector(".cell");
+firstcell.click();
