@@ -41,9 +41,49 @@ bold.addEventListener("click", (e) => {
   bold.style.backgroundColor = cellprp.bold ? activeCellPrp : inactiveCellPrp;
 });
 
+italic.addEventListener("click", (e) => {
+  let add = addBar.value;
+  let [cell, cellprp] = getActiveCell(add);
+
+  cellprp.italic = !cellprp.italic;
+  cell.style.fontStyle = cellprp.italic ? "italic" : "normal";
+  italic.style.backgroundColor = cellprp.italic
+    ? activeCellPrp
+    : inactiveCellPrp;
+});
+
+underline.addEventListener("click", (e) => {
+  let add = addBar.value;
+  let [cell, cellprp] = getActiveCell(add);
+
+  cellprp.underline = !cellprp.underline;
+  cell.style.textDecoration = cellprp.underline ? "underline" : "normal";
+  underline.style.backgroundColor = cellprp.underline
+    ? activeCellPrp
+    : inactiveCellPrp;
+});
+
+fontSize.addEventListener("change", (e) => {
+  let add = addBar.value;
+  let [cell, cellprp] = getActiveCell(add);
+
+  cellprp.fontSize = fontSize.value;
+  cell.style.fontSize = cellprp.fontSize + "px";
+  fontSize.value = cellprp.fontSize;
+});
+
+fontFamily.addEventListener("change", (e) => {
+  let add = addBar.value;
+  let [cell, cellprp] = getActiveCell(add);
+
+  cellprp.fontFamily = fontFamily.value;
+  cell.style.fontFamily = cellprp.fontFamily;
+  fontFamily.value = cellprp.fontFamily;
+});
+
 function getActiveCell(add) {
   let [rid, cid] = decodeRCID(add);
-  let cell = document.querySelector(`.cell[rid="${rid}"[cid="${cid}"]]`);
+  let cell = document.querySelector(`.cell[rid="${rid}"][cid="${cid}"]`);
   let cellprp = sheetDB[rid][cid];
   return [cell, cellprp];
 }

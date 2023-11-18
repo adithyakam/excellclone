@@ -29,6 +29,7 @@ for (let i = 0; i < rows; i++) {
     cell.setAttribute("contenteditable", "true");
     cell.setAttribute("rid", i);
     cell.setAttribute("cid", j);
+    cell.setAttribute("spellcheck", "false");
     // cell.spellcheck(false);
     addRow.appendChild(cell);
     addListnerForAddBarDisplay(cell, i, j);
