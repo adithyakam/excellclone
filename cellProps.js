@@ -81,6 +81,56 @@ fontFamily.addEventListener("change", (e) => {
   fontFamily.value = cellprp.fontFamily;
 });
 
+fontColor.addEventListener("change", (e) => {
+  let add = addBar.value;
+  let [cell, cellprp] = getActiveCell(add);
+
+  cellprp.fontColor = fontColor.value;
+  cell.style.color = cellprp.fontColor;
+  fontColor.value = cellprp.fontColor;
+});
+
+bgColor.addEventListener("change", (e) => {
+  let add = addBar.value;
+  let [cell, cellprp] = getActiveCell(add);
+
+  cellprp.bgColor = bgColor.value;
+  cell.style.backgroundColor = cellprp.fontColor;
+  bgColor.value = cellprp.bgColor;
+});
+
+alignment.forEach((alignEle) => {
+  alignEle.addEventListener("click", (e) => {
+    let add = addBar.value;
+    let [cell, cellprp] = getActiveCell(add);
+
+    let alignVal = e.target.classList[0];
+    cellprp.alignment = alignVal;
+    cell.style.textAlign = cellprp.alignment;
+
+    switch (alignVal) {
+      case "left":
+        leftAlign.style.backgroundColor = activeCellPrp;
+        centerAlign.style.backgroundColor = inactiveCellPrp;
+        rightAlign.style.backgroundColor = inactiveCellPrp;
+
+        break;
+      case "center":
+        leftAlign.style.backgroundColor = inactiveCellPrp;
+        centerAlign.style.backgroundColor = activeCellPrp;
+        rightAlign.style.backgroundColor = inactiveCellPrp;
+
+        break;
+      case "right":
+        leftAlign.style.backgroundColor = inactiveCellPrp;
+        centerAlign.style.backgroundColor = inactiveCellPrp;
+        rightAlign.style.backgroundColor = activeCellPrp;
+
+        break;
+    }
+  });
+});
+
 function getActiveCell(add) {
   let [rid, cid] = decodeRCID(add);
   let cell = document.querySelector(`.cell[rid="${rid}"][cid="${cid}"]`);
