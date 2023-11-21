@@ -11,6 +11,8 @@ for (i = 0; i < rows; i++) {
       fontSize: "14",
       fontColor: "#000000",
       bgColor: "#000000",
+      value: "",
+      formula: "",
     };
     sheetRow.push(cellProp);
   }
@@ -95,7 +97,7 @@ bgColor.addEventListener("change", (e) => {
   let [cell, cellprp] = getActiveCell(add);
 
   cellprp.bgColor = bgColor.value;
-  cell.style.backgroundColor = cellprp.fontColor;
+  cell.style.backgroundColor = cellprp.bgColor;
   bgColor.value = cellprp.bgColor;
 });
 
@@ -130,6 +132,64 @@ alignment.forEach((alignEle) => {
     }
   });
 });
+const addListnerToCells = (cell) => {
+  cell.addEventListener("click", (e) => {
+    let adr = addBar.value;
+    let [rid, cid] = decodeRCID(adr);
+    let cellprp = sheetDB[rid][cid];
+
+    cell.style.fontWeight = cellprp.bold ? "bold" : "normal";
+    cell.style.fontStyle = cellprp.italic ? "italic" : "normal";
+    cell.style.textDecoration = cellprp.underline ? "underline" : "normal";
+    cell.style.fontSize = cellprp.fontSize + "px";
+    cell.style.fontFamily = cellprp.fontFamily;
+    cell.style.color = cellprp.fontColor;
+    cell.style.backgroundColor =
+      cellprp.bgColor === "#000000" ? "transparent" : cellprp.bgColor;
+    cell.style.textAlign = cellprp.alignment;
+
+    bold.style.backgroundColor = cellprp.bold ? activeCellPrp : inactiveCellPrp;
+    italic.style.backgroundColor = cellprp.italic
+      ? activeCellPrp
+      : inactiveCellPrp;
+
+    underline.style.backgroundColor = cellprp.underline
+      ? activeCellPrp
+      : inactiveCellPrp;
+    fontSize.value = cellprp.fontSize;
+
+    fontColor.value = cellprp.fontColor;
+    fontFamily.value = cellprp.fontFamily;
+
+    bgColor.value = cellprp.bgColor;
+    cell.style.textAlign = cellprp.alignment;
+    switch (cellprp.alignment) {
+      case "left":
+        leftAlign.style.backgroundColor = activeCellPrp;
+        centerAlign.style.backgroundColor = inactiveCellPrp;
+        rightAlign.style.backgroundColor = inactiveCellPrp;
+
+        break;
+      case "center":
+        leftAlign.style.backgroundColor = inactiveCellPrp;
+        centerAlign.style.backgroundColor = activeCellPrp;
+        rightAlign.style.backgroundColor = inactiveCellPrp;
+
+        break;
+      case "right":
+        leftAlign.style.backgroundColor = inactiveCellPrp;
+        centerAlign.style.backgroundColor = inactiveCellPrp;
+        rightAlign.style.backgroundColor = activeCellPrp;
+
+        break;
+    }
+  });
+};
+
+let allCells = document.querySelectorAll(".cell");
+for (let i = 0; i < allCells.length; i++) {
+  addListnerToCells(allCells[i]);
+}
 
 function getActiveCell(add) {
   let [rid, cid] = decodeRCID(add);
