@@ -184,6 +184,9 @@ const addListnerToCells = (cell) => {
 
         break;
     }
+
+    let frmBar = document.querySelector(".formula-bar");
+    frmBar.value = cellprp.formula;
   });
 };
 
