@@ -45,6 +45,18 @@ const removeChildFromParent = (formula) => {
   }
 };
 
+const removeChildFromGraph = (ipformula, childAdd) => {
+  const [rid, cid] = decodeRCID(childAdd);
+  let encodedFrml = ipformula.split(" ");
+  for (let i = 0; i < encodedFrml.length; i++) {
+    let asciiValue = encodedFrml[i].charAt(0);
+    if (asciiValue >= 65 && asciiValue <= 90) {
+      let [prid, pcid] = decodeRCID(encodedFrml);
+      graphComponentMatrix[prid][pcid].pop;
+    }
+  }
+};
+
 const updateChildrenCells = (parentAdd) => {
   let [prtcell, parentcellprp] = getActiveCell(parentAdd);
   let children = parentcellprp.children;
@@ -65,20 +77,39 @@ frmlBar.addEventListener("keydown", (e) => {
   let inpformula = frmlBar.value;
 
   if (e.key === "Enter" && frmlBar.value) {
-    let evaluatedVal = evalFormula(inpformula);
-
     let adr = addBar.value;
     let [cell, cellprp] = getActiveCell(adr);
 
     if (inpformula !== cellprp.formula) {
       removeChildFromParent(cellprp.formula);
     }
+    addChildToGraph(inpformula, adr);
+    let isCyclic = isGraphCyclic(graphComponentMatrix);
+
+    if (isCyclic) {
+      alert("formula is cyclic");
+      removeChildFromGraph(inpformula, adr);
+      return;
+    }
+    let evaluatedVal = evalFormula(inpformula);
 
     setUIAndCellPrp(evaluatedVal, inpformula, adr);
     addChildToParent(inpformula);
     updateChildrenCells(adr);
   }
 });
+
+const addChildToGraph = (formula, childadd) => {
+  const [rid, cid] = decodeRCID(childadd);
+  let encodedFrml = formula.split(" ");
+  for (let i = 0; i < encodedFrml.length; i++) {
+    let asciiValue = encodedFrml[i].charAt(0);
+    if (asciiValue >= 65 && asciiValue <= 90) {
+      let [prid, pcid] = decodeRCID(encodedFrml);
+      graphComponentMatrix[prid][pcid].push([rid, cid]);
+    }
+  }
+};
 
 const evalFormula = (formula) => {
   let encodedFrml = formula.split(" ");
