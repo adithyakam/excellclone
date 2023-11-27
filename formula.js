@@ -49,10 +49,10 @@ const removeChildFromGraph = (ipformula, childAdd) => {
   const [rid, cid] = decodeRCID(childAdd);
   let encodedFrml = ipformula.split(" ");
   for (let i = 0; i < encodedFrml.length; i++) {
-    let asciiValue = encodedFrml[i].charAt(0);
+    let asciiValue = encodedFrml[i].charCodeAt(0);
     if (asciiValue >= 65 && asciiValue <= 90) {
-      let [prid, pcid] = decodeRCID(encodedFrml);
-      graphComponentMatrix[prid][pcid].pop;
+      let [prid, pcid] = decodeRCID(encodedFrml[i]);
+      graphComponentMatrix[prid][pcid].pop();
     }
   }
 };
@@ -75,7 +75,6 @@ const updateChildrenCells = (parentAdd) => {
 
 frmlBar.addEventListener("keydown", (e) => {
   let inpformula = frmlBar.value;
-
   if (e.key === "Enter" && frmlBar.value) {
     let adr = addBar.value;
     let [cell, cellprp] = getActiveCell(adr);
@@ -103,9 +102,9 @@ const addChildToGraph = (formula, childadd) => {
   const [rid, cid] = decodeRCID(childadd);
   let encodedFrml = formula.split(" ");
   for (let i = 0; i < encodedFrml.length; i++) {
-    let asciiValue = encodedFrml[i].charAt(0);
+    let asciiValue = encodedFrml[i].charCodeAt(0);
     if (asciiValue >= 65 && asciiValue <= 90) {
-      let [prid, pcid] = decodeRCID(encodedFrml);
+      let [prid, pcid] = decodeRCID(encodedFrml[i]);
       graphComponentMatrix[prid][pcid].push([rid, cid]);
     }
   }

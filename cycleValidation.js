@@ -11,10 +11,10 @@ for (let i = 0; i < rows; i++) {
 function isGraphCyclic(graphComponentMatrix) {
   let visited = [];
   let dfsVisited = [];
-  for (let i = 0; i < rows.length; i++) {
+  for (let i = 0; i < rows; i++) {
     let visitedRow = [];
     let dfsVisitedRow = [];
-    for (let j = 0; j < cols.length; j++) {
+    for (let j = 0; j < cols; j++) {
       visitedRow.push(false);
       dfsVisitedRow.push(false);
     }
@@ -22,8 +22,8 @@ function isGraphCyclic(graphComponentMatrix) {
     dfsVisited.push(dfsVisitedRow);
   }
 
-  for (let i = 0; i < rows.length; i++) {
-    for (let j = 0; j < cols.length; j++) {
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
       if (visited[i][j] == false) {
         let response = dfsCycleDetection(
           graphComponentMatrix,
@@ -32,7 +32,7 @@ function isGraphCyclic(graphComponentMatrix) {
           visited,
           dfsVisited
         );
-        if (response == true) {
+        if (response === true) {
           return true;
         }
       }
@@ -54,8 +54,7 @@ function dfsCycleDetection(
 
   for (let i = 0; i < graphComponentMatrix[srow][scol].length; i++) {
     let [rid, cid] = graphComponentMatrix[srow][scol][i];
-
-    if ((visited[rid][cid] = false)) {
+    if (visited[rid][cid] === false) {
       let response = dfsCycleDetection(
         graphComponentMatrix,
         rid,
@@ -63,8 +62,8 @@ function dfsCycleDetection(
         visited,
         dfsVisited
       );
-      if (response == true) return true;
-    } else if (visited[rid][cid] == true && dfsVisited[rid][cid] == true) {
+      if (response === true) return true;
+    } else if (dfsVisited[rid][cid] === true) {
       return true;
     }
   }
