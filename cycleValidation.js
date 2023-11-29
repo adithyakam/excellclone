@@ -33,13 +33,13 @@ function isGraphCyclic(graphComponentMatrix) {
           dfsVisited
         );
         if (response === true) {
-          return true;
+          return [i, j];
         }
       }
     }
   }
 
-  return false;
+  return null;
 }
 
 function dfsCycleDetection(

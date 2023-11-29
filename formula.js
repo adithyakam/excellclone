@@ -83,10 +83,19 @@ frmlBar.addEventListener("keydown", (e) => {
       removeChildFromParent(cellprp.formula);
     }
     addChildToGraph(inpformula, adr);
-    let isCyclic = isGraphCyclic(graphComponentMatrix);
+    let cycleResponse = isGraphCyclic(graphComponentMatrix);
 
-    if (isCyclic) {
-      alert("formula is cyclic");
+    if (cycleResponse) {
+      // alert("formula is cyclic");
+      let response = confirm(
+        "your formula cyclic ? do want to trace your path"
+      );
+      while (response == true) {
+        isGraphCyclicTracePath(graphComponentMatrix, cycleResponse);
+        let response = confirm(
+          "your formula cyclic ? do want to trace your path"
+        );
+      }
       removeChildFromGraph(inpformula, adr);
       return;
     }
