@@ -44,6 +44,3 @@ function addListnerForAddBarDisplay(cell, i, j) {
     addBar.value = `${colID}${rowID}`;
   });
 }
-
-let firstcell = document.querySelector(".cell");
-firstcell.click();

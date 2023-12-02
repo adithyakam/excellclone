@@ -1,4 +1,4 @@
-function isGraphCyclicTracePath(graphComponentMatrix, cycleResponse) {
+async function isGraphCyclicTracePath(graphComponentMatrix, cycleResponse) {
   let [srow, scol] = cycleResponse;
   let visited = [];
   let dfsVisited = [];
@@ -29,7 +29,7 @@ function isGraphCyclicTracePath(graphComponentMatrix, cycleResponse) {
   //       }
   //     }
   //   }
-  let response = dfsCycleDetection(
+  let response = await dfsCycleDetection(
     graphComponentMatrix,
     srow,
     scol,
@@ -37,13 +37,19 @@ function isGraphCyclicTracePath(graphComponentMatrix, cycleResponse) {
     dfsVisited
   );
 
-  if (response) return true;
-  return false;
+  if (response) return Promise.resolve(true);
+  return Promise.resolve(false);
 }
 
-function delay() {}
+function colorPromise() {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res();
+    }, 2000);
+  });
+}
 
-function dfsCycleDetectionTracePath(
+async function dfsCycleDetectionTracePath(
   graphComponentMatrix,
   srow,
   scol,
@@ -56,10 +62,12 @@ function dfsCycleDetectionTracePath(
   let cell = document.querySelector(`.cell[rid="${srow}"][cid="${scol}"]`);
   cell.style.backgroundColor = "lightblue";
 
+  await colorPromise();
+
   for (let i = 0; i < graphComponentMatrix[srow][scol].length; i++) {
     let [rid, cid] = graphComponentMatrix[srow][scol][i];
     if (visited[rid][cid] === false) {
-      let response = dfsCycleDetection(
+      let response = await dfsCycleDetectionTracePath(
         graphComponentMatrix,
         rid,
         cid,
@@ -67,24 +75,24 @@ function dfsCycleDetectionTracePath(
         dfsVisited
       );
       if (response === true) {
-        setTimeout(() => {
-          cell.style.backgroundColor = "ligthblue";
-        }, 2000);
-        cell.style.backgroundColor = "transparent";
+        cell.style.backgroundColor = "ligthblue";
+        await colorPromise();
+        // cell.style.backgroundColor = "transparent";
 
-        return true;
+        return Promise.resolve(true);
       }
     } else if (dfsVisited[rid][cid] === true) {
       let cyclicCell = document.querySelector(
         `.cell[rid="${rid}"][cid="${cid}"]`
       );
-      //   cyclicCell.style.backgroundColor = "ligthsalmon";
+      cell.style.backgroundColor = "ligthblue";
+      await colorPromise();
       cyclicCell.style.backgroundColor = "transparent";
 
-      return true;
+      return Promise.resolve(true);
     }
   }
 
   dfsVisited[srow][scol] = false;
-  return false;
+  return Promise.resolve(false);
 }

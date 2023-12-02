@@ -73,7 +73,7 @@ const updateChildrenCells = (parentAdd) => {
   }
 };
 
-frmlBar.addEventListener("keydown", (e) => {
+frmlBar.addEventListener("keydown", async (e) => {
   let inpformula = frmlBar.value;
   if (e.key === "Enter" && frmlBar.value) {
     let adr = addBar.value;
@@ -91,7 +91,7 @@ frmlBar.addEventListener("keydown", (e) => {
         "your formula cyclic ? do want to trace your path"
       );
       while (response == true) {
-        isGraphCyclicTracePath(graphComponentMatrix, cycleResponse);
+        await isGraphCyclicTracePath(graphComponentMatrix, cycleResponse);
         let response = confirm(
           "your formula cyclic ? do want to trace your path"
         );
