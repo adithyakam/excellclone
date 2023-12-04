@@ -1,7 +1,17 @@
-async function isGraphCyclicTracePath(graphComponentMatrix, cycleResponse) {
-  let [srow, scol] = cycleResponse;
+//create promise of setTimeOut to delay in coloring
+
+function colorPromise() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+}
+
+async function isGraphCyclicTracePath(cycleResponse) {
   let visited = [];
   let dfsVisited = [];
+  let [srcr, srcc] = cycleResponse;
   for (let i = 0; i < rows; i++) {
     let visitedRow = [];
     let dfsVisitedRow = [];
@@ -13,86 +23,49 @@ async function isGraphCyclicTracePath(graphComponentMatrix, cycleResponse) {
     dfsVisited.push(dfsVisitedRow);
   }
 
-  //   for (let i = 0; i < rows; i++) {
-  //     for (let j = 0; j < cols; j++) {
-  //       if (visited[i][j] == false) {
-  //         let response = dfsCycleDetection(
-  //           graphComponentMatrix,
-  //           i,
-  //           j,
-  //           visited,
-  //           dfsVisited
-  //         );
-  //         if (response === true) {
-  //           return true;
-  //         }
-  //       }
-  //     }
-  //   }
-  let response = await dfsCycleDetection(
-    graphComponentMatrix,
-    srow,
-    scol,
+  let response = await dfsCycleDetectionTracePath(
+    srcr,
+    srcc,
     visited,
     dfsVisited
   );
-
-  if (response) return Promise.resolve(true);
+  if (response === true) return Promise.resolve(true);
   return Promise.resolve(false);
 }
 
-function colorPromise() {
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      res();
-    }, 2000);
-  });
-}
-
-async function dfsCycleDetectionTracePath(
-  graphComponentMatrix,
-  srow,
-  scol,
-  visited,
-  dfsVisited
-) {
-  visited[srow][scol] = true;
-  dfsVisited[srow][scol] = true;
-
-  let cell = document.querySelector(`.cell[rid="${srow}"][cid="${scol}"]`);
-  cell.style.backgroundColor = "lightblue";
-
-  await colorPromise();
-
-  for (let i = 0; i < graphComponentMatrix[srow][scol].length; i++) {
-    let [rid, cid] = graphComponentMatrix[srow][scol][i];
-    if (visited[rid][cid] === false) {
-      let response = await dfsCycleDetectionTracePath(
-        graphComponentMatrix,
-        rid,
-        cid,
-        visited,
-        dfsVisited
-      );
-      if (response === true) {
-        cell.style.backgroundColor = "ligthblue";
-        await colorPromise();
-        // cell.style.backgroundColor = "transparent";
-
-        return Promise.resolve(true);
-      }
-    } else if (dfsVisited[rid][cid] === true) {
-      let cyclicCell = document.querySelector(
-        `.cell[rid="${rid}"][cid="${cid}"]`
-      );
-      cell.style.backgroundColor = "ligthblue";
+async function dfsCycleDetectionTracePath(i, j, visited, dfsVisited) {
+  let cell = document.querySelector(`.cell[rid="${i}"][cid="${j}"]`);
+  if (visited[i][j]) {
+    if (dfsVisited[i][j]) {
+      cell.style.backgroundColor = "lightsalmon";
       await colorPromise();
-      cyclicCell.style.backgroundColor = "transparent";
+      cell.style.backgroundColor = "lightblue";
+      await colorPromise();
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(false);
+  }
 
+  visited[i][j] = true;
+  dfsVisited[i][j] = true;
+  cell.style.backgroundColor = "lightblue";
+  await colorPromise();
+  for (let k = 0; k < graphComponentMatrix[i][j].length; k++) {
+    let child = graphComponentMatrix[i][j][k];
+    let response = await dfsCycleDetectionTracePath(
+      child[0],
+      child[1],
+      visited,
+      dfsVisited
+    );
+    if (response === true) {
+      cell.style.backgroundColor = "transparent";
+      await colorPromise();
       return Promise.resolve(true);
     }
   }
-
-  dfsVisited[srow][scol] = false;
+  dfsVisited[i][j] = false;
+  cell.style.backgroundColor = "transparent";
+  await colorPromise();
   return Promise.resolve(false);
 }

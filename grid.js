@@ -1,28 +1,27 @@
 let rows = 100;
 let cols = 26;
-
-let addColCount = document.querySelector(".add-col-container");
-let rowColCount = document.querySelector(".add-row-container");
-let cellsCount = document.querySelector(".cells-container");
-let addBar = document.querySelector(".address-bar");
-
+let addressColCont = document.querySelector(".address-col-cont");
+let addressRowCont = document.querySelector(".address-row-cont");
+let cellsCont = document.querySelector(".cells-cont");
+let addressBar = document.querySelector(".address-bar");
 for (let i = 0; i < rows; i++) {
-  let addCol = document.createElement("div");
-  addCol.setAttribute("class", "add-col");
-  addCol.innerText = i + 1;
-  addColCount.appendChild(addCol);
+  let addressCol = document.createElement("div");
+  addressCol.setAttribute("class", "address-col");
+  addressCol.innerText = i + 1;
+  addressColCont.appendChild(addressCol);
 }
 
 for (let i = 0; i < cols; i++) {
-  let addRow = document.createElement("div");
-  addRow.setAttribute("class", "add-row");
-  addRow.innerText = String.fromCharCode(65 + i);
-  rowColCount.appendChild(addRow);
+  let addressRow = document.createElement("div");
+  addressRow.setAttribute("class", "address-row");
+  addressRow.innerText = String.fromCharCode(65 + i);
+  addressRowCont.appendChild(addressRow);
 }
 
 for (let i = 0; i < rows; i++) {
-  let addRow = document.createElement("div");
-  addRow.setAttribute("class", "cell-row");
+  let cellsRow = document.createElement("div");
+  cellsRow.setAttribute("class", "cells-row");
+
   for (let j = 0; j < cols; j++) {
     let cell = document.createElement("div");
     cell.setAttribute("class", "cell");
@@ -30,17 +29,14 @@ for (let i = 0; i < rows; i++) {
     cell.setAttribute("rid", i);
     cell.setAttribute("cid", j);
     cell.setAttribute("spellcheck", "false");
-    // cell.spellcheck(false);
-    addRow.appendChild(cell);
-    addListnerForAddBarDisplay(cell, i, j);
+    eventListenerForCell(cell, i, j);
+    cellsRow.appendChild(cell);
   }
-  cellsCount.appendChild(addRow);
+  cellsCont.appendChild(cellsRow);
 }
 
-function addListnerForAddBarDisplay(cell, i, j) {
+function eventListenerForCell(cell, i, j) {
   cell.addEventListener("click", (e) => {
-    let rowID = i + 1;
-    let colID = String.fromCharCode(65 + j);
-    addBar.value = `${colID}${rowID}`;
+    addressBar.value = `${String.fromCharCode(65 + j)}${i + 1}`;
   });
 }

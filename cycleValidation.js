@@ -1,16 +1,19 @@
-let graphComponentMatrix = [];
+//storage of parent child relation
 let collectedGraphComponent = [];
-// for (let i = 0; i < rows; i++) {
-//   let row = [];
-//   for (let j = 0; j < cols; j++) {
-//     row.push([]);
-//   }
-//   graphComponentMatrix.push(row);
+let graphComponentMatrix = [];
+// for(let i=0;i<rows;i++){
+//     let row = [];
+//     for(let j=0;j<cols;j++){
+//         row.push([]);
+//     }
+//     graphComponentMatrix.push(row);
 // }
+// checking whether graph is cyclic or not
 
-function isGraphCyclic(graphComponentMatrix) {
+function isGraphCyclic() {
   let visited = [];
   let dfsVisited = [];
+
   for (let i = 0; i < rows; i++) {
     let visitedRow = [];
     let dfsVisitedRow = [];
@@ -21,53 +24,26 @@ function isGraphCyclic(graphComponentMatrix) {
     visited.push(visitedRow);
     dfsVisited.push(dfsVisitedRow);
   }
-
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      if (visited[i][j] == false) {
-        let response = dfsCycleDetection(
-          graphComponentMatrix,
-          i,
-          j,
-          visited,
-          dfsVisited
-        );
-        if (response === true) {
-          return [i, j];
-        }
-      }
+      if (dfsCycleDetection(i, j, visited, dfsVisited)) return [i, j];
     }
   }
-
   return null;
 }
 
-function dfsCycleDetection(
-  graphComponentMatrix,
-  srow,
-  scol,
-  visited,
-  dfsVisited
-) {
-  visited[srow][scol] = true;
-  dfsVisited[srow][scol] = true;
-
-  for (let i = 0; i < graphComponentMatrix[srow][scol].length; i++) {
-    let [rid, cid] = graphComponentMatrix[srow][scol][i];
-    if (visited[rid][cid] === false) {
-      let response = dfsCycleDetection(
-        graphComponentMatrix,
-        rid,
-        cid,
-        visited,
-        dfsVisited
-      );
-      if (response === true) return true;
-    } else if (dfsVisited[rid][cid] === true) {
-      return true;
-    }
+function dfsCycleDetection(i, j, visited, dfsVisited) {
+  if (visited[i][j]) {
+    if (dfsVisited[i][j]) return true;
+    return false;
   }
 
-  dfsVisited[srow][scol] = false;
+  visited[i][j] = true;
+  dfsVisited[i][j] = true;
+  for (let k = 0; k < graphComponentMatrix[i][j].length; k++) {
+    let child = graphComponentMatrix[i][j][k];
+    if (dfsCycleDetection(child[0], child[1], visited, dfsVisited)) return true;
+  }
+  dfsVisited[i][j] = false;
   return false;
 }
